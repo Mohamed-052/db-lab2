@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - To-Do App</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 360px; }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-size: 14px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; background: #007bff; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .error { color: #d9534f; background: #f2dede; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; text-align: center; }
+        .footer-link { text-align: center; margin-top: 15px; font-size: 14px; }
+        .footer-link a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Register</h2>
+        
+        {% with messages = get_flashed_messages(category_filter=["register_error"]) %}
+            {% if messages %}
+                <div class="error">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/register" method="POST" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password">
+            </div>
+            <div id="jsError" class="error" style="display: none;"></div>
+            <button type="submit">Register</button>
+        </form>
+        <div class="footer-link">
+            Already have an account? <a href="/login">Log in</a>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
+            const errorDiv = document.getElementById("jsError");
+
+            if (!name) { errorDiv.innerText = "Name is required"; errorDiv.style.display = "block"; return false; }
+            if (!email) { errorDiv.innerText = "Email is required"; errorDiv.style.display = "block"; return false; }
+            if (!password) { errorDiv.innerText = "Password is required"; errorDiv.style.display = "block"; return false; }
+            if (!confirmPassword) { errorDiv.innerText = "Confirm password is required"; errorDiv.style.display = "block"; return false; }
+            if (password !== confirmPassword) { errorDiv.innerText = "Passwords do not match"; errorDiv.style.display = "block"; return false; }
+            
+            errorDiv.style.display = "none";
+            return true;
+        }
+    </script>
+</body>
+</html>
